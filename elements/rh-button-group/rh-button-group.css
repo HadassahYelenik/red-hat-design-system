@@ -1,0 +1,8 @@
+:host {
+  display: inline-flex;
+  gap: var(--rh-space-sm, 6px);
+}
+
+[hidden] {
+  display: none !important;
+}
