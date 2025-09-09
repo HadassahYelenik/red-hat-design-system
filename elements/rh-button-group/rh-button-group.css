@@ -1,8 +1,62 @@
 :host {
   display: inline-flex;
-  gap: var(--rh-space-sm, 6px);
+  gap: 6px;
+  margin: 1rem;
 }
 
-[hidden] {
-  display: none !important;
+.group {
+  display: inline-flex;
+  gap: 0.5rem;
+}
+
+/* Default button styling */
+::slotted(button) {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s;
+}
+
+/* Variants */
+::slotted(button[variant="primary"]) {
+  background: #007bba;
+  border-color: #007bba;
+  color: #fff;
+}
+::slotted(button[variant="primary"]:hover) {
+  background: #005f9e;
+}
+
+::slotted(button[variant="secondary"]) {
+  background: #f3f3f3;
+  border-color: #d2d2d2;
+  color: #333;
+}
+::slotted(button[variant="secondary"]:hover) {
+  background: #e0e0e0;
+}
+
+::slotted(button[variant="danger"]) {
+  background: #c9190b;
+  border-color: #a30000;
+  color: #fff;
+}
+::slotted(button[variant="danger"]:hover) {
+  background: #a30000;
+}
+
+/* Icon button */
+::slotted(button[icon]) {
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+::slotted(button[icon] svg) {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
 }

@@ -4,83 +4,109 @@ import { property } from 'lit/decorators/property.js';
 import { queryAssignedElements } from 'lit/decorators/query-assigned-elements.js';
 
 import { themable } from '@rhds/elements/lib/themable.js';
-
 import styles from './rh-button-group.css';
+import { Logger } from '@patternfly/pfe-core/controllers/logger.js';
+
+// ✅ Import RhButton type for IntelliSense
+import type { RhButton } from '@rhds/elements/rh-button/rh-button.js';
+import '@rhds/elements/rh-button/rh-button.js';
+
+// ✅ Side-effect imports to register elements for runtime & linter
+import '@rhds/elements/rh-button/rh-button.js';
+import '@rhds/elements/rh-button-group/rh-button-group.js';
 
 @customElement('rh-button-group')
-@themable
-export class RhButtonGroup extends LitElement {
+export class RhButtonGroup extends themable(LitElement) {
   static readonly styles = [styles];
+  #logger = new Logger(this);
 
   /**
-   * Defines the relationship of the grouped buttons.
-   * - "group": regular tab order
-   * - "toolbar": roving tabindex (arrow key navigation)
+   * Role of the group:
+   * - "group": Each button tabbable (normal tab order)
+   * - "toolbar": Roving tabindex (WAI-ARIA Toolbar pattern)
    */
   @property({ reflect: true })
   role: 'group' | 'toolbar' = 'group';
 
+  /**
+   * Slotted buttons: can be native <button> or <rh-button>
+   */
   @queryAssignedElements({ flatten: true })
-  private _buttons!: HTMLElement[];
+  private _buttons!: (HTMLButtonElement | RhButton)[];
 
-  firstUpdated() {
+  override firstUpdated() {
+    if (!this._buttons?.length) {
+      this.#logger.warn('<rh-button-group> has no slotted buttons');
+      return;
+    }
+
     if (this.role === 'toolbar') {
-      this._setupToolbar();
+      this.#setupToolbar();
     }
   }
 
-  private _setupToolbar() {
-    // Initialize roving tabindex: only first button focusable
+  /**
+   * Setup roving tabindex for toolbar
+   */
+  #setupToolbar() {
+    let currentIndex = 0;
+
     this._buttons.forEach((btn, i) => {
       btn.setAttribute('tabindex', i === 0 ? '0' : '-1');
     });
 
     this.addEventListener('keydown', (event: KeyboardEvent) => {
-      if (this.role !== 'toolbar') return;
+      const { key } = event;
 
-      const currentIndex = this._buttons.findIndex(
-        btn => btn.getAttribute('tabindex') === '0'
-      );
+      if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) {
+        return;
+      }
 
-      if (['ArrowRight', 'ArrowDown'].includes(event.key)) {
-        event.preventDefault();
-        this._moveFocus(currentIndex, 1);
-      } else if (['ArrowLeft', 'ArrowUp'].includes(event.key)) {
-        event.preventDefault();
-        this._moveFocus(currentIndex, -1);
-      } else if (event.key === 'Home') {
-        event.preventDefault();
-        this._focusButton(0);
-      } else if (event.key === 'End') {
-        event.preventDefault();
-        this._focusButton(this._buttons.length - 1);
+      event.preventDefault();
+
+      switch (key) {
+        case 'ArrowRight':
+        case 'ArrowDown':
+          this._moveFocus(currentIndex, 1);
+          currentIndex = (currentIndex + 1) % this._buttons.length;
+          break;
+        case 'ArrowLeft':
+        case 'ArrowUp':
+          this._moveFocus(currentIndex, -1);
+          currentIndex = (currentIndex - 1 + this._buttons.length) % this._buttons.length;
+          break;
+        case 'Home':
+          this._focusButton(0);
+          currentIndex = 0;
+          break;
+        case 'End':
+          this._focusButton(this._buttons.length - 1);
+          currentIndex = this._buttons.length - 1;
+          break;
       }
     });
   }
 
   private _moveFocus(current: number, delta: number) {
-    const nextIndex = (current + delta + this._buttons.length) % this._buttons.length;
-    this._focusButton(nextIndex);
+    const next = (current + delta + this._buttons.length) % this._buttons.length;
+    this._focusButton(next);
   }
 
   private _focusButton(index: number) {
     this._buttons.forEach((btn, i) => {
       btn.setAttribute('tabindex', i === index ? '0' : '-1');
     });
-    this._buttons[index].focus();
+    (this._buttons[index] as HTMLElement).focus();
   }
 
   override render() {
-    return html`
-      <div role="${this.role}">
-        <slot></slot>
-      </div>
-    `;
+    return html`<slot></slot>`;
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
     'rh-button-group': RhButtonGroup;
+    'rh-button': RhButton;
   }
 }

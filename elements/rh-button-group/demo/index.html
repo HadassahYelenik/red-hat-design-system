@@ -1,29 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>rh-button-group Demo</title>
 
-<h2>Button Group Demo</h2>
+    <!-- Corrected paths to load the custom elements -->
+    <script type="module" src="../../rh-button/rh-button.js"></script>
+    <script type="module" src="../rh-button-group.js"></script>
 
-<!-- Group -->
-<rh-button-group role="group">
-  <rh-button>Save</rh-button>
-  <rh-button>Cancel</rh-button>
-</rh-button-group>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 2rem;
+      }
 
-<br /><br />
+      h1 {
+        margin-bottom: 1rem;
+      }
 
-<!-- Toolbar -->
-<rh-button-group role="toolbar">
-  <rh-button icon="bold"></rh-button>
-  <rh-button icon="italic"></rh-button>
-  <rh-button icon="underline"></rh-button>
-</rh-button-group>
+      rh-button-group {
+        display: inline-flex;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>rh-button-group Demo</h1>
 
+    <rh-button-group>
+      <rh-button variant="primary">Save</rh-button>
+      <rh-button variant="secondary">Cancel</rh-button>
+      <rh-button>More</rh-button>
+    </rh-button-group>
 
-<script type="module">
-  import '@rhds/elements/rh-button-group/rh-button-group.js';
-</script>
-
-<style>
-rh-button-group {
-  /* insert demo styles */
-}
-</style>
-
+    <rh-button-group>
+      <rh-button variant="danger">Delete</rh-button>
+      <rh-button variant="secondary">Undo</rh-button>
+    </rh-button-group>
+  </body>
+</html>
