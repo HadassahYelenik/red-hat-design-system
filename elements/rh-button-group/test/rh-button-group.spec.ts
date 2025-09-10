@@ -13,9 +13,9 @@ describe('<rh-button-group>', function() {
       element = await createFixture<RhButtonGroup>(html`<rh-button-group></rh-button-group>`);
       const klass = customElements.get('rh-button-group');
       expect(element)
-        .to.be.an.instanceOf(klass)
-        .and
-        .to.be.an.instanceOf(RhButtonGroup);
+          .to.be.an.instanceOf(klass)
+          .and
+          .to.be.an.instanceOf(RhButtonGroup);
     });
-  })
+  });
 });

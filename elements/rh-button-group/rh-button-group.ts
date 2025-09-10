@@ -9,7 +9,6 @@ import { Logger } from '@patternfly/pfe-core/controllers/logger.js';
 
 // ✅ Import RhButton type for IntelliSense
 import type { RhButton } from '@rhds/elements/rh-button/rh-button.js';
-import '@rhds/elements/rh-button/rh-button.js';
 
 // ✅ Side-effect imports to register elements for runtime & linter
 import '@rhds/elements/rh-button/rh-button.js';
