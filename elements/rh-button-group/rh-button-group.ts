@@ -33,7 +33,13 @@ export class RhButtonGroup extends themable(LitElement) {
   @queryAssignedElements({ flatten: true })
   private _buttons!: (HTMLButtonElement | RhButton)[];
 
-  override firstUpdated() {
+  protected firstUpdated() {
+    if (typeof window !== 'undefined') {
+      this._initializeToolbar();
+    }// skip during SSR
+  }
+
+  private _initializeToolbar() {
     if (!this._buttons?.length) {
       this.#logger.warn('<rh-button-group> has no slotted buttons');
       return;
@@ -43,6 +49,7 @@ export class RhButtonGroup extends themable(LitElement) {
       this.#setupToolbar();
     }
   }
+
 
   /**
    * Setup roving tabindex for toolbar
