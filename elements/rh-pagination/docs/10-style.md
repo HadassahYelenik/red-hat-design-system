@@ -42,7 +42,11 @@ The box variant shows a background color for each page number and navigation con
 
 ### Open variant
 
-The open variant has transparent backgrounds for all buttons. The active state for a page number shows a blue border on the bottom.
+The borderless variant has transparent backgrounds for all buttons. The active state for a page number shows a blue border on the bottom.
+
+<rh-alert state="info">
+  <strong>Note:</strong> Use <code>variant="borderless"</code> in your code. The old <code>variant="open"</code> is deprecated but still works for backward compatibility.
+</rh-alert>
 
 <uxdot-example color-palette="lightest" width-adjustment="736px">
   <img alt="Truncated pagination with 50 pages and an input on the right hand side. This version is 'open' where there is no background color to denote a box to click on."
